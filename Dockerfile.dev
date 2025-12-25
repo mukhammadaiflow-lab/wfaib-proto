@@ -1,0 +1,27 @@
+# WFAIB Proto Development Dockerfile
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install dependencies for development
+RUN apk add --no-cache libc6-compat
+
+# Copy package files
+COPY package.json package-lock.json* ./
+
+# Install all dependencies (including devDependencies)
+RUN npm install
+
+# Copy prisma schema for client generation
+COPY prisma ./prisma
+
+# Generate Prisma client
+RUN npx prisma generate
+
+# Copy rest of application
+COPY . .
+
+EXPOSE 3000
+
+# Default command for development
+CMD ["npm", "run", "dev"]
