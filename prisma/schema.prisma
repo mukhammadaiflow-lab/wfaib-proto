@@ -10,6 +10,8 @@ datasource db {
 model User {
   id    Int    @id @default(autoincrement())
   email String @unique
+
+  workflows Workflow[]
 }
 
 model Workflow {
@@ -19,20 +21,34 @@ model Workflow {
   owner     User     @relation(fields: [ownerId], references: [id])
   createdAt DateTime @default(now())
   json      Json
+
+  runs      Run[]
 }
 
 model Run {
   id         Int      @id @default(autoincrement())
   workflowId Int
+  workflow   Workflow @relation(fields: [workflowId], references: [id])
   status     String
+  input      Json?
   result     Json?
   createdAt  DateTime @default(now())
+
+  logs       RunLog[]
+
+  @@index([workflowId])
 }
 
 model RunLog {
   id       Int @id @default(autoincrement())
   runId    Int
-  node     String
+  run      Run @relation(fields: [runId], references: [id])
+  nodeId   String
+  nodeType String
+  level    String @default("info")
+  message  String?
   output   Json?
   createdAt DateTime @default(now())
+
+  @@index([runId])
 }
