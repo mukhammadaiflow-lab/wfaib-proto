@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id    Int    @id @default(autoincrement())
+  email String @unique
+}
+
+model Workflow {
+  id        Int      @id @default(autoincrement())
+  name      String
+  ownerId   Int
+  owner     User     @relation(fields: [ownerId], references: [id])
+  createdAt DateTime @default(now())
+  json      Json
+}
+
+model Run {
+  id         Int      @id @default(autoincrement())
+  workflowId Int
+  status     String
+  result     Json?
+  createdAt  DateTime @default(now())
+}
+
+model RunLog {
+  id       Int @id @default(autoincrement())
+  runId    Int
+  node     String
+  output   Json?
+  createdAt DateTime @default(now())
+}
