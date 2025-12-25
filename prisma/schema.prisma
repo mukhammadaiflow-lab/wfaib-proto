@@ -8,8 +8,10 @@ datasource db {
 }
 
 model User {
-  id    Int    @id @default(autoincrement())
-  email String @unique
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
+  createdAt DateTime   @default(now())
+  workflows Workflow[]
 }
 
 model Workflow {
@@ -18,21 +20,33 @@ model Workflow {
   ownerId   Int
   owner     User     @relation(fields: [ownerId], references: [id])
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   json      Json
+  runs      Run[]
 }
 
 model Run {
-  id         Int      @id @default(autoincrement())
+  id         Int       @id @default(autoincrement())
   workflowId Int
-  status     String
+  workflow   Workflow  @relation(fields: [workflowId], references: [id])
+  status     String    @default("pending") // pending, running, completed, failed
+  input      Json?
   result     Json?
-  createdAt  DateTime @default(now())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  logs       RunLog[]
 }
 
 model RunLog {
-  id       Int @id @default(autoincrement())
-  runId    Int
-  node     String
-  output   Json?
+  id        Int      @id @default(autoincrement())
+  runId     Int
+  run       Run      @relation(fields: [runId], references: [id])
+  nodeId    String
+  nodeType  String
+  status    String   // started, completed, failed
+  input     Json?
+  output    Json?
+  error     String?
+  duration  Int?     // milliseconds
   createdAt DateTime @default(now())
 }
