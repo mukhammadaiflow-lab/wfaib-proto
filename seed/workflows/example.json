@@ -1,0 +1,12 @@
+{
+  "name": "Example webhook -> HTTP -> MockAI",
+  "nodes": [
+    { "id": "n1", "type": "webhook", "config": {} },
+    { "id": "n2", "type": "http", "config": { "url": "https://httpbin.org/post", "method": "POST" } },
+    { "id": "n3", "type": "llm", "config": { "prompt": "Mock response based on previous output" } }
+  ],
+  "edges": [
+    { "from": "n1", "to": "n2" },
+    { "from": "n2", "to": "n3" }
+  ]
+}
