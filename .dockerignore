@@ -1,0 +1,38 @@
+# Dependencies
+node_modules
+npm-debug.log
+
+# Build outputs
+.next
+out
+build
+dist
+
+# Development
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+.docker
+
+# Testing
+coverage
+.nyc_output
+
+# Misc
+*.md
+LICENSE
+.eslintcache
